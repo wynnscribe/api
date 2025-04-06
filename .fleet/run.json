@@ -1,0 +1,18 @@
+{
+    "configurations": [
+
+        {
+            "name": "サーバー実行",
+            "type": "gradle",
+            "workingDir": "$PROJECT_DIR$",
+            "tasks": [":api:com.wynnscribe.server.ApplicationKt.main()"],
+            "args": ["-p", "$PROJECT_DIR$/api"],
+            "environmentFile": "./.env",
+            "initScripts": {
+                "flmapper": "ext.mapPath = { path -> path }",
+                "com.wynnscribe.server.ApplicationKt.main()": "\n    def gradleProjectId = 'api:api'\n    def runAppTaskName = 'com.wynnscribe.server.ApplicationKt.main()'\n    def mainClass = 'com.wynnscribe.server.ApplicationKt'\n    def javaExePath = '/usr/lib/jvm/temurin-21-jdk-amd64/bin/java'\n    def _workingDir = '$PROJECT_DIR$'\n\n    def sourceSetName = 'main'\n\n    allprojects {\n        afterEvaluate { project ->\n            if (project.rootProject.name + project.path == gradleProjectId) {\n                def overwrite = project.tasks.findByName(runAppTaskName) != null\n                project.tasks.create(name: runAppTaskName, overwrite: overwrite, type: JavaExec) {\n                    if (javaExePath) executable = javaExePath\n                    if (project.pluginManager.hasPlugin(\"org.jetbrains.kotlin.multiplatform\")) {\n                        project.kotlin.targets.each { target ->\n                            target.compilations.each { compilation ->\n                                if (compilation.defaultSourceSetName == sourceSetName) {\n                                    classpath = compilation.output.allOutputs + compilation.runtimeDependencyFiles\n                                }\n                            }\n                        }\n                    } else {\n                        classpath = project.sourceSets[sourceSetName].runtimeClasspath\n                    }\n    \n                    main = mainClass\n                    \n                    if(_workingDir) workingDir = _workingDir\n                    standardInput = System.in\n                }\n            }\n        }\n    }\n    ",
+
+            }
+        }
+    ]
+}

@@ -1,0 +1,960 @@
+openapi: 3.1.0
+info:
+  title: Wynnscribe API
+  description: Wynnscribe API
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:8080'
+paths:
+  /api/v1/login:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idToken:
+                  type: string
+      responses:
+        "200":
+          description: "ok"
+  /api/v1/logout:
+    get:
+      responses:
+        "200":
+          description: "ok"
+  /api/v1/export:
+    post:
+      summary: "export translations"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExportTranslation"
+      responses:
+        "200":
+          # Response schema depends on the export implementation, adjust if needed.
+          # Assuming it might return status or potentially the exported data structure.
+          # For now, keeping the original Language ref as a placeholder.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Language" # Placeholder, adjust as needed
+          description: export translations (Response structure might vary)
+  /api/v1/languages:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Language"
+          description: get all languages
+    post:
+      summary: "add new language"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LanguageCreate"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Language"
+          description: create a new language
+  /api/v1/languages/{languageId}:
+    get:
+      summary: "get language by id"
+      parameters:
+        - name: languageId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/LanguageId"
+          description: ID of the language to get
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Language"
+          description: get language by id
+    delete:
+      summary: "delete language"
+      parameters:
+        - name: languageId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/LanguageId"
+          description: ID of the language to delete
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Language" # Assuming delete returns the deleted object
+          description: delete language
+  /api/v1/projects:
+    post:
+      summary: "add new project"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectCreate"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project" # Use Project (Impl equivalent)
+          description: create a new project
+    get:
+      summary: "get projects"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Project" # Use Project (Impl equivalent)
+          description: get all projects
+  /api/v1/projects/{projectId}:
+    get:
+      summary: "get project by id"
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/ProjectId"
+          description: ID of the project to get
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project" # Use Project (Impl equivalent)
+          description: get project by id
+    delete:
+      summary: "delete project"
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/ProjectId"
+          description: ID of the project to delete
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project" # Assuming delete returns the deleted object
+          description: delete project
+    patch:
+      summary: "update project"
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/ProjectId"
+          description: ID of the project to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectUpdate"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project" # Use Project (Impl equivalent)
+          description: update project
+  /api/v1/projects/{projectId}/originals:
+    get:
+      summary: "get originals"
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/ProjectId"
+          description: ID of the project
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Original" # Use Original (Impl equivalent)
+          description: get all originals
+    post:
+      summary: "add new original"
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/ProjectId"
+          description: ID of the project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OriginalCreate"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Original" # Use Original (Impl equivalent)
+          description: create a new original
+  /api/v1/projects/{projectId}/originals/details:
+    get:
+      summary: "get originals with translations"
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/ProjectId"
+          description: ID of the project
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: lang
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OriginalDetails" # Use OriginalDetails
+          description: get all originals with translations
+  /api/v1/projects/{projectId}/originals/{originalId}/translations/details:
+    get:
+      summary: "get originals with translations"
+      parameters:
+        - name: originalId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/OriginalId"
+          description: ID of the original to get
+        - name: lang
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/ProjectId"
+          description: ID of the project
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TranslationDetails" # Use TranslationDetails
+          description: get all originals with translations
+  /api/v1/projects/{projectId}/originals/{originalId}:
+    patch:
+      summary: "update original"
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/ProjectId"
+          description: ID of the project
+        - name: originalId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/OriginalId"
+          description: ID of the original to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OriginalUpdate"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Original" # Use Original (Impl equivalent)
+          description: update original
+    delete:
+      summary: "delete original"
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/ProjectId"
+          description: ID of the project
+        - name: originalId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/OriginalId"
+          description: ID of the original to delete
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Original" # Assuming delete returns the deleted object
+          description: delete original
+  /api/v1/projects/{projectId}/originals/{originalId}/translations:
+    post:
+      summary: "add new translation"
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/ProjectId"
+          description: ID of the project
+        - name: originalId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/OriginalId"
+          description: ID of the original
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TranslationCreate"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Translation" # Use Translation (Impl equivalent)
+          description: create a new translation
+  /api/v1/projects/{projectId}/originals/translations:
+    post:
+      summary: "add multiple translations in batch"
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/ProjectId"
+          description: ID of the project
+        - name: lang
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/LanguageId"
+          description: ID of the language
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/TranslationCreateMany"
+      responses:
+        "201":
+          description: translations created successfully
+          # No response body typically for 201 batch create unless specified
+  /api/v1/projects/{projectId}/originals/{originalId}/translations/{translationId}:
+    delete:
+      summary: "delete translation"
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/ProjectId"
+          description: ID of the project
+        - name: originalId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/OriginalId"
+          description: ID of the original
+        - name: translationId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/TranslationId"
+          description: ID of the translation to delete
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Translation" # Assuming delete returns the deleted object
+          description: delete translation
+  /api/v1/projects/{projectId}/originals/{originalId}/translations/{translationId}/status:
+    patch:
+      summary: "update translation status"
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/ProjectId"
+          description: ID of the project
+        - name: originalId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/OriginalId"
+          description: ID of the original
+        - name: translationId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/TranslationId"
+          description: ID of the translation to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TranslationUpdateStatus"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Translation" # Use Translation (Impl equivalent)
+          description: update translation status
+  /api/v1/projects/{projectId}/originals/{originalId}/translations/{translationId}/votes:
+    post:
+      summary: "add new vote"
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/ProjectId"
+          description: ID of the project
+        - name: originalId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/OriginalId"
+          description: ID of the original
+        - name: translationId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/TranslationId"
+          description: ID of the translation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VoteCreate"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Vote" # Use Vote (Impl equivalent)
+          description: create a new vote
+
+components:
+  schemas:
+    ProjectId:
+      type: integer
+      format: int64
+      description: "@JvmInline value class ProjectId(val value: Long)"
+
+    UserId:
+      type: string
+      description: "@JvmInline value class UserId(val value: String)"
+
+    # Represents Project.Impl
+    Project:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - filterId
+      properties:
+        id:
+          $ref: '#/components/schemas/ProjectId'
+        name:
+          type: string
+        description:
+          type: string
+        filterId:
+          $ref: '#/components/schemas/FilterId'
+
+    ProjectUpdate:
+      type: object
+      required:
+        - name
+        - description
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        filter:
+          $ref: '#/components/schemas/FilterUpdate'
+
+    ProjectCreate:
+      type: object
+      required:
+        - name
+        - description
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        filter:
+          $ref: '#/components/schemas/FilterCreate'
+
+    FilterId:
+      type: integer
+      format: int64
+      description: "@JvmInline value class FilterId(val value: Long)"
+
+    # Represents Filter.Impl
+    Filter:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          $ref: '#/components/schemas/FilterId'
+        type:
+          $ref: '#/components/schemas/FilterContent' # Represents Content.Impl structure
+          nullable: true
+        title:
+          $ref: '#/components/schemas/FilterContent' # Represents Content.Impl structure
+          nullable: true
+        content:
+          $ref: '#/components/schemas/FilterContent' # Represents Content.Impl structure
+          nullable: true
+
+    FilterCreate:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/FilterContentCreate'
+        title:
+          $ref: '#/components/schemas/FilterContentCreate'
+        content:
+          $ref: '#/components/schemas/FilterContentCreate'
+
+    FilterUpdate:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/FilterContentUpdate'
+        title:
+          $ref: '#/components/schemas/FilterContentUpdate'
+        content:
+          $ref: '#/components/schemas/FilterContentUpdate'
+
+    # Represents Filter.Content.Impl structure
+    FilterContent:
+      type: object
+      required:
+        - content
+        - withColors
+        - fullMatch
+      properties:
+        content:
+          type: string
+        withColors:
+          type: boolean
+        fullMatch:
+          type: boolean
+
+    FilterContentCreate:
+      type: object
+      required:
+        - content
+        - withColors
+        - fullMatch
+      properties:
+        content:
+          type: string
+        withColors:
+          type: boolean
+        fullMatch:
+          type: boolean
+
+    FilterContentUpdate:
+      type: object
+      required:
+        - content
+        - withColors
+        - fullMatch
+      properties:
+        content:
+          type: string
+        withColors:
+          type: boolean
+        fullMatch:
+          type: boolean
+
+    OriginalId:
+      type: integer
+      format: int64
+      description: "@JvmInline value class OriginalId(val value: Long)"
+
+    OriginalText:
+      type: string
+      description: "@JvmInline value class OriginalText(val value: String)"
+
+    Template:
+      type: string
+      description: "@JvmInline value class Template(val value: String)"
+      nullable: true # Based on Original.Impl
+
+    OriginalType:
+      type: string
+      enum:
+        - UserInterface
+        - GameItem
+        - Chat
+        - Conversation
+
+    # Represents Original.Impl
+    Original:
+      type: object
+      required:
+        - id
+        - text
+        - stopOnMatch
+        - filterId
+        - projectId
+        - type # Added type
+      properties:
+        id:
+          $ref: '#/components/schemas/OriginalId'
+        text:
+          $ref: '#/components/schemas/OriginalText'
+        stopOnMatch:
+          type: boolean
+        template:
+          $ref: '#/components/schemas/Template' # Nullable
+        filterId:
+          $ref: '#/components/schemas/FilterId'
+        parentId:
+          $ref: '#/components/schemas/OriginalId' # Nullable
+          nullable: true
+        projectId:
+          $ref: '#/components/schemas/ProjectId'
+        type:
+          $ref: '#/components/schemas/OriginalType' # Added type
+
+    OriginalUpdate:
+      type: object
+      required:
+        - text
+        - stopOnMatch
+        - type # Added type
+      properties:
+        text:
+          $ref: '#/components/schemas/OriginalText'
+        stopOnMatch:
+          type: boolean
+        template:
+          $ref: '#/components/schemas/Template' # Nullable
+        type:
+          $ref: '#/components/schemas/OriginalType' # Added type
+        filter:
+          $ref: '#/components/schemas/FilterUpdate'
+
+    OriginalCreate:
+      type: object
+      required:
+        - text
+        - stopOnMatch
+        - type # Added type
+      properties:
+        text:
+          $ref: '#/components/schemas/OriginalText'
+        stopOnMatch:
+          type: boolean
+        template:
+          $ref: '#/components/schemas/Template' # Nullable
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/OriginalCreate' # Recursive reference for nested creation
+          nullable: true
+        filter:
+          $ref: '#/components/schemas/FilterCreate'
+        parentId: # Added based on Original.Create structure
+          $ref: '#/components/schemas/OriginalId'
+          nullable: true
+        type: # Added type
+          $ref: '#/components/schemas/OriginalType'
+
+    OriginalDetails:
+      type: object
+      required:
+        - id
+        - text
+        - stopOnMatch
+        - projectId
+        - children
+        - type # Added type
+        # bestTranslation is nullable
+      properties:
+        id:
+          $ref: '#/components/schemas/OriginalId'
+        text:
+          $ref: '#/components/schemas/OriginalText'
+        stopOnMatch:
+          type: boolean
+        template:
+          $ref: '#/components/schemas/Template' # Nullable
+        projectId:
+          $ref: '#/components/schemas/ProjectId'
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/OriginalDetails' # Recursive reference
+        bestTranslation:
+          $ref: '#/components/schemas/TranslationDetails'
+          nullable: true
+        type:
+          $ref: '#/components/schemas/OriginalType' # Added type
+        parentId:
+          $ref: '#/components/schemas/OriginalId'
+          nullable: true
+
+    TranslationId:
+      type: integer
+      format: int64
+      description: "@JvmInline value class TranslationId(val value: Long)"
+
+    TranslatedText:
+      type: string
+      description: "@JvmInline value class TranslatedText(val value: String)"
+
+    LanguageId:
+      type: string
+      description: "@JvmInline value class LanguageId(val value: String)"
+
+    Language:
+      type: object
+      required:
+        - id
+        - name
+        - englishName
+        - emoji
+        - color
+      properties:
+        id:
+          $ref: '#/components/schemas/LanguageId'
+        name:
+          type: string
+        englishName:
+          type: string
+        emoji:
+          type: string
+        color:
+          type: string
+
+    LanguageCreate:
+      type: object
+      required:
+        - id
+        - name
+        - englishName
+        - emoji
+        - color
+      properties:
+        id:
+          $ref: '#/components/schemas/LanguageId'
+        name:
+          type: string
+        englishName:
+          type: string
+        emoji:
+          type: string
+        color:
+          type: string
+
+    # Represents Translation.Impl
+    Translation:
+      type: object
+      required:
+        - id
+        - originalId
+        - text
+        - languageId
+        - userId
+        - status
+      properties:
+        id:
+          $ref: '#/components/schemas/TranslationId'
+        originalId:
+          $ref: '#/components/schemas/OriginalId'
+        text:
+          $ref: '#/components/schemas/TranslatedText'
+        languageId:
+          $ref: '#/components/schemas/LanguageId'
+        userId:
+          $ref: '#/components/schemas/UserId'
+        status:
+          $ref: '#/components/schemas/TranslationStatus'
+
+    TranslationUpdateStatus:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          $ref: '#/components/schemas/TranslationStatus'
+
+    TranslationDetails:
+      type: object
+      required:
+        - id
+        - originalId
+        - text
+        - languageId
+        - userId
+        - status
+        - votes
+      properties:
+        id:
+          $ref: '#/components/schemas/TranslationId'
+        originalId:
+          $ref: '#/components/schemas/OriginalId'
+        text:
+          $ref: '#/components/schemas/TranslatedText'
+        languageId:
+          $ref: '#/components/schemas/LanguageId'
+        userId:
+          $ref: '#/components/schemas/UserId'
+        status:
+          $ref: '#/components/schemas/TranslationStatus'
+        votes:
+          type: array
+          items:
+            $ref: '#/components/schemas/VoteDetails'
+
+    TranslationCreate:
+      type: object
+      required:
+        - text # Only text is required based on Kotlin Translation.Create
+      properties:
+        text:
+          $ref: '#/components/schemas/TranslatedText'
+
+    TranslationCreateMany:
+      type: object
+      required:
+        - originalId # Required based on Kotlin Translation.CreateMany
+        - text     # Required based on Kotlin Translation.CreateMany
+      properties:
+        originalId:
+          $ref: '#/components/schemas/OriginalId'
+        text:
+          $ref: '#/components/schemas/TranslatedText'
+
+    VoteDetails:
+      type: object
+      required:
+        - userId
+        - type
+        - translationId
+      properties:
+        userId:
+          $ref: '#/components/schemas/UserId'
+        type:
+          $ref: '#/components/schemas/VoteType'
+        translationId:
+          $ref: '#/components/schemas/TranslationId'
+
+    # Represents Vote.Impl
+    Vote:
+      type: object
+      required:
+        - userId
+        - translationId
+        - type
+      properties:
+        userId:
+          $ref: '#/components/schemas/UserId'
+        translationId:
+          $ref: '#/components/schemas/TranslationId'
+        type:
+          $ref: '#/components/schemas/VoteType'
+
+    VoteCreate:
+      type: object
+      required:
+        - type # Only type is required based on Kotlin Vote.Create
+      properties:
+        type:
+          $ref: '#/components/schemas/VoteType'
+
+    ExportTranslation:
+      type: object
+      required:
+        - format
+      properties:
+        format:
+          type: string
+
+    VoteType:
+      type: string
+      enum:
+        - Up
+        - Down
+
+    TranslationStatus:
+      type: string
+      enum:
+        - Accepted
+        - Rejected
+        - Pending
+        - NeedsReview

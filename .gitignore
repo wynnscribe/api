@@ -1,0 +1,87 @@
+# Gradle
+# ------
+# Gradle build cache and daemon files
+.gradle/
+# Build outputs (classes, jars, reports, etc.) for all projects
+build/
+
+# Gradle Wrapper generated JAR (optional, some teams commit this)
+# Uncomment the next line if you DON'T want to commit the wrapper JAR
+# gradle/wrapper/gradle-wrapper.jar
+
+# Local Gradle properties (potentially sensitive information)
+gradle.properties # If it contains secrets; otherwise, commit it for common settings
+local.properties  # Often used for SDK paths or API keys
+
+# Downloaded distributions (if stored locally)
+gradle-*.zip
+
+# IDE specific files
+# ------------------
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# Eclipse
+.classpath
+.project
+.settings/
+bin/
+*.class # Although usually in build/, sometimes Eclipse puts them elsewhere
+
+# Visual Studio Code (allow shared settings)
+.vscode/
+!/.vscode/settings.json
+!/.vscode/tasks.json
+!/.vscode/launch.json
+!/.vscode/extensions.json
+!/.vscode/*.code-workspace
+
+# Operating System specific files
+# -------------------------------
+# macOS
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux Vim swap files, etc.
+*~
+*.swp
+
+# Logs and temporary files
+# ------------------------
+*.log
+*.tmp
+*.temp
+
+# Maven local repository outputs (if using publishToMavenLocal)
+# Usually covered by build/, but can be explicit if necessary
+# .m2/repository/
+
+# Other common ignores
+# --------------------
+# For example, generated code folders if not intended to be committed
+# generated-sources/
+
+# Add any other project-specific files or directories you want to ignore below
+# -------------------------------------------------------------------------
+# e.g., coverage reports, specific tool outputs, etc.
+# coverage/
+.env
+
+exports/
+
+data.db
+
+.fleet/
+
+app/src/main/kotlin/com/wynnscribe/server/test.kt

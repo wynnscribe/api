@@ -7,7 +7,7 @@ import com.wynnscribe.server.databases.Projects
 fun initializeGeneralItems() {
     val generalItemsProject = Projects.getOrCreate(
         Project.Create(
-            name = "/General/Item",
+            name = "/Item/General",
             description = "",
             ))?:return
 
@@ -16,222 +16,189 @@ fun initializeGeneralItems() {
         original = Project.Original.Create(
             text = Project.Original.OriginalText(
                 """
-                    <!italic>{re:(.+)}Unidentified {in:#wynnscribe.gear.names}
-                    <!italic><gray>This item's powers have
-                    <!italic><gray>been sealed. Take it to
-                    <!italic><gray>an identifier to unlock
-                    <!italic><gray>its potential.
+                    <!italic><#82eff4>Ability Shard
+                    <!italic><gray>Use this to reset your
+                    <!italic><dark_purple><white>Ability Tree </white><gray>while in a town.
                     <!italic><dark_purple> 
-                    <!italic><green>Info:
-                    <!italic><dark_purple><green>- </green><gray>Lv. Range: </gray><white>{re:(.+)}
-                    <!italic><dark_purple><green>- </green><gray>Tier: {re:(.+)}
-                    <!italic><dark_purple><green>- </green><gray>Type: </gray><white>{in:#wynnscribe.gear.names}
-                    """.trimIndent()
-            ),
-            template = Project.Original.Template(
-                """
-                    <!italic>{1}Unidentified {in:1}
-                    <!italic><gray>This item's powers have
-                    <!italic><gray>been sealed. Take it to
-                    <!italic><gray>an identifier to unlock
-                    <!italic><gray>its potential.
-                    <!italic><dark_purple> 
-                    <!italic><green>Info:
-                    <!italic><dark_purple><green>- </green><gray>Lv. Range: </gray><white>{2}
-                    <!italic><dark_purple><green>- </green><gray>Tier: {3}
-                    <!italic><dark_purple><green>- </green><gray>Type: </gray><white>{in:2}
-                    """.trimIndent()
-            ),
-            stopOnMatch = true,
-            children = listOf(),
-            filter = Project.Filter.Create(
-                Project.Filter.Content.Create(
-                    content = "#wynnscribe.item.gear-box",
-                    withColors = false,
-                    fullMatch = true
-                ),
-                null,
-                null
-            ),
-            type = Project.Original.Type.UserInterface
-        )
-    )
-
-    // >>> ダンジョンの鍵 >>>
-    val dungeonKey = Originals.getOrCreate(
-        projectId = generalItemsProject.id,
-        original = Project.Original.Create(
-            text = Project.Original.OriginalText(
-                """
-                    <!italic><gold>{re:(.+)} Key
-                    <!italic><gray>Grants access to the
-                    <!italic>{re:.+}<white>{re:(.+)}</white><gray> once
-                    {re:([\s\S]+)}
-                    """.trimIndent()
-            ),
-            template = Project.Original.Template(
-                """
-                    <!italic><gold>{1} Key
-                    <!italic><gray>Grants access to the
-                    <!italic><dark_purple><white>{2}</white><gray> once
-                    {3}
-                    """.trimIndent()
-            ),
-            stopOnMatch = true,
-            filter = Project.Filter.Create(
-                Project.Filter.Content.Create(
-                    content = "#wynnscribe.item.dungeon-key",
-                    withColors = false,
-                    fullMatch = true
-                ),
-                null,
-                null
-            ),
-            type = Project.Original.Type.GameItem,
-        )
-    )?:return
-    Originals.getOrCreate(
-        projectId = generalItemsProject.id,
-        original = Project.Original.Create(
-            text = Project.Original.OriginalText(
-                """
-                    Dungeon Info:
-                    """.trimIndent()
-            ),
-            stopOnMatch = false,
-            parentId = dungeonKey.id,
-            type = Project.Original.Type.GameItem
-        )
-    )
-    Originals.getOrCreate(
-        projectId = generalItemsProject.id,
-        original = Project.Original.Create(
-            text = Project.Original.OriginalText(
-                """
-                    Combat Lv:
-                    """.trimIndent()
-            ),
-            stopOnMatch = false,
-            parentId = dungeonKey.id,
-            type = Project.Original.Type.GameItem
-        )
-    )
-    Originals.getOrCreate(
-        projectId = generalItemsProject.id,
-        original = Project.Original.Create(
-            text = Project.Original.OriginalText(
-                """
-                    Coordinates:
-                    """.trimIndent()
-            ),
-            stopOnMatch = false,
-            parentId = dungeonKey.id,
-            type = Project.Original.Type.GameItem
-        )
-    )
-    // <<< ダンジョン鍵 <<<
-
-    // テレポートスクロール
-    Originals.getOrCreate(
-        projectId = generalItemsProject.id,
-        original = Project.Original.Create(
-            text = Project.Original.OriginalText(
-                """
-                    <!italic><#8193ff>{re:(.+)} Teleportation Scroll <#f9e79e>[{re:(.+)}]
-                    <!italic><gray>Warps to {re:(.+)}
-                    <!italic><dark_purple> 
-                    <!italic><white><font:space>󐀅</font><font:keybind></font> Right-Click to use
-                    <!italic><dark_purple> 
-                    <!italic><dark_gray>Charges are restored every {re:(.+)}
-                    """.trimIndent()
-            ),
-            template = Project.Original.Template(
-                """
-                    <!italic><#8193ff>{1} Teleportation Scroll <#f9e79e>[{2}]
-                    <!italic><gray>Warps to {3}</font>
-                    <!italic><dark_purple> 
-                    <!italic><white><font:space>󐀅</font><font:keybind></font> Right-Click to use
-                    <!italic><dark_purple> 
-                    <!italic><dark_gray>Charges are restored every {4}
-                    """.trimIndent()
-            ),
-            stopOnMatch = true,
-            filter = Project.Filter.Create(
-                Project.Filter.Content.Create(
-                    content = "#wynnscribe.item.teleport-scroll",
-                    withColors = false,
-                    fullMatch = true
-                ),
-                null,
-                null
-            ),
-            type = Project.Original.Type.GameItem,
-        )
-    )?:return
-    val emeraldPouch = Originals.getOrCreate(
-        projectId = generalItemsProject.id,
-        original = Project.Original.Create(
-            text = Project.Original.OriginalText(
-                """
-                    <!italic><white><green>Emerald Pouch</green><dark_green> [Tier {re:(.+)}]
                     {re:(.+)}
-                    <!italic><dark_purple> 
-                    {re:([\s\S]+)}
-                    <!italic><dark_purple> 
-                    <!italic><dark_purple><white>Right-Click </white><gray>to view contents
                     """.trimIndent()
             ),
             template = Project.Original.Template(
                 """
-                    <!italic><white><green>Emerald Pouch</green><dark_green> [Tier {1}]
-                    {2}
+                    <!italic><#82eff4>Ability Shard
+                    <!italic><gray>Use this to reset your
+                    <!italic><dark_purple><white>Ability Tree </white><gray>while in a town.
                     <!italic><dark_purple> 
-                    {3}
-                    <!italic><dark_purple> 
-                    <!italic><dark_purple><white>Right-Click </white><gray>to view contents
+                    {1}
                     """.trimIndent()
             ),
             stopOnMatch = true,
+            children = listOf(
+                Project.Original.Create(
+                    text = Project.Original.OriginalText("Quest Req:"),
+                    stopOnMatch = false,
+                    type = Project.Original.Type.GameItem
+                )
+            ),
             filter = Project.Filter.Create(
                 Project.Filter.Content.Create(
-                    content = "#wynnscribe.item.emerald-pouch",
+                    content = "Ability Shard",
                     withColors = false,
                     fullMatch = true
                 ),
                 null,
                 null
             ),
-            type = Project.Original.Type.GameItem,
-        )
-    )?:return
-    Originals
-        .getOrCreate(
-        projectId = generalItemsProject.id,
-        original = Project.Original.Create(
-            text = Project.Original.OriginalText("<gray>- Converts up to </gray><white>{re:(.+)}"),
-            template = Project.Original.Template("<gray>- Converts up to </gray><white>{1}"),
-            parentId = emeraldPouch.id,
-            stopOnMatch = false,
-            type = Project.Original.Type.GameItem,
+            type = Project.Original.Type.GameItem
         )
     )
+    
     Originals.getOrCreate(
         projectId = generalItemsProject.id,
         original = Project.Original.Create(
-            text = Project.Original.OriginalText("No Auto-Conversions"),
-            parentId = emeraldPouch.id,
-            stopOnMatch = false,
-            type = Project.Original.Type.GameItem,
+            text = Project.Original.OriginalText(
+                """
+                    <!italic><gold>Ingredient Pouch
+                    <!italic><dark_purple> 
+                    <!italic><dark_purple><white>Left-Click</white><gray> to view contents
+                    <!italic><dark_purple><white>Shift Right-Click</white><gray> to sell (</gray>{re:(.+)}<gray>)
+                    {re:([\s\S]+)?}
+                    """.trimIndent()
+            ),
+            template = Project.Original.Template(
+                """
+                    <!italic><gold>Ingredient Pouch
+                    <!italic><dark_purple> 
+                    <!italic><dark_purple><white>Left-Click</white><gray> to view contents
+                    <!italic><dark_purple><white>Shift Right-Click</white><gray> to sell (</gray>{1}<gray>)
+                    {2}
+                    """.trimIndent()
+            ),
+            stopOnMatch = true,
+            filter = Project.Filter.Create(
+                Project.Filter.Content.Create(
+                    content = "Ingredient Pouch",
+                    withColors = false,
+                    fullMatch = true
+                ),
+                null,
+                null
+            ),
+            type = Project.Original.Type.GameItem
         )
     )
+    
     Originals.getOrCreate(
         projectId = generalItemsProject.id,
         original = Project.Original.Create(
-            text = Project.Original.OriginalText("<gray>- {re:(.+)} Rows </gray><dark_gray>({re:(.+)} Total)"),
-            template = Project.Original.Template("<gray>- {1} Rows </gray><dark_gray>({2} Total)"),
-            parentId = emeraldPouch.id,
-            stopOnMatch = false,
-            type = Project.Original.Type.GameItem,
+            text = Project.Original.OriginalText(
+                """
+                    <!italic><gold>Ingredient Pouch
+                    <!italic><dark_purple> 
+                    <!italic><dark_purple><white>Left-Click</white><gray> to view contents
+                    <!italic><dark_purple> 
+                    <!italic><gray>(Your pouch is empty)
+                    """.trimIndent()
+            ),
+            stopOnMatch = true,
+            filter = Project.Filter.Create(
+                Project.Filter.Content.Create(
+                    content = "Ingredient Pouch",
+                    withColors = false,
+                    fullMatch = true
+                ),
+                null,
+                null
+            ),
+            type = Project.Original.Type.GameItem
+        )
+    )
+    
+    Originals.getOrCreate(
+        projectId = generalItemsProject.id,
+        original = Project.Original.Create(
+            text = Project.Original.OriginalText(
+                """
+                    <!italic><aqua>Character Info
+                    <!italic><font:invisible><gray>b6ad241b
+                    <!italic><gray>View your current character
+                    <!italic><gray>information, assign skill points,
+                    <!italic><gray>access your ability tree, and more
+                    <!italic><dark_purple> 
+                    <!italic><dark_purple><dark_green>Unassigned Skill Points: </dark_green><white>{re:(.+)}
+                    <!italic><dark_purple><dark_aqua>✦ Unused Ability Points: </dark_aqua><white>{re:(.+)}
+                    <!italic><dark_purple> 
+                    <!italic><white><font:keybind></font><green> Click to Open
+                    """.trimIndent()
+            ),
+            template = Project.Original.Template(
+                """
+                    <!italic><aqua>Character Info
+                    <!italic><font:invisible><gray>b6ad241b
+                    <!italic><gray>View your current character
+                    <!italic><gray>information, assign skill points,
+                    <!italic><gray>access your ability tree, and more
+                    <!italic><dark_purple> 
+                    <!italic><dark_purple><dark_green>Unassigned Skill Points: </dark_green><white>{1}
+                    <!italic><dark_purple><dark_aqua>✦ Unused Ability Points: </dark_aqua><white>{2}
+                    <!italic><dark_purple> 
+                    <!italic><white><font:keybind></font><green> Click to Open
+                    """.trimIndent()
+            ),
+            stopOnMatch = true,
+            filter = Project.Filter.Create(
+                Project.Filter.Content.Create(
+                    content = "Character Info",
+                    withColors = false,
+                    fullMatch = true
+                ),
+                null,
+                null
+            ),
+            type = Project.Original.Type.GameItem
+        )
+    )
+    
+    Originals.getOrCreate(
+        projectId = generalItemsProject.id,
+        original = Project.Original.Create(
+            text = Project.Original.OriginalText(
+                """
+                    <!italic><light_purple>Content Book
+                    <!italic><gray>Hold and Right-Click to see content
+                    <!italic><dark_purple> 
+                    <!italic><dark_purple>Quests: <light_purple>{re:(.+)} <dark_purple>[{re:(.+)}%]
+                    <!italic><dark_purple> 
+                    <!italic><dark_purple>Discoveries:
+                    <!italic><dark_purple>- <gray>Territorial: <white>{re:(.+)} <dark_purple>[{re:(.+)}%]
+                    <!italic><dark_purple>- <gold>World: <yellow>{re:(.+)} <dark_purple>[{re:(.+)}%]
+                    <!italic><dark_purple>- <dark_aqua>Secret: <aqua>{re:(.+)} <dark_purple>[{re:(.+)}%]
+                    """.trimIndent()
+            ),
+            template = Project.Original.Template(
+                """
+                    <!italic><light_purple>Content Book
+                    <!italic><gray>Hold and Right-Click to see content
+                    <!italic><dark_purple> 
+                    <!italic><dark_purple>Quests: <light_purple>{1} <dark_purple>[{2}%]
+                    <!italic><dark_purple> 
+                    <!italic><dark_purple>Discoveries:
+                    <!italic><dark_purple>- <gray>Territorial: <white>{3} <dark_purple>[{4}%]
+                    <!italic><dark_purple>- <gold>World: <yellow>{5} <dark_purple>[{6}%]
+                    <!italic><dark_purple>- <dark_aqua>Secret: <aqua>{7} <dark_purple>[{8}%]
+                    """.trimIndent()
+            ),
+            stopOnMatch = true,
+            filter = Project.Filter.Create(
+                Project.Filter.Content.Create(
+                    content = "Content Book",
+                    withColors = false,
+                    fullMatch = true
+                ),
+                null,
+                null
+            ),
+            type = Project.Original.Type.GameItem
         )
     )
 }

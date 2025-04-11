@@ -39,6 +39,13 @@ fun main(args: Array<String>) {
         initializeTeleportScroll()
         initializeDungeonKeys()
         initializeHorse()
+        initializeMaterials()
+        initializeIngredients()
+        initializeCrafting()
+        initializePotions()
+        initializeAbilityShards()
+        initializeIngredientsPouch()
+        initializeContentBook()
     }
     // ktorを初期化
     embeddedServer(Netty, port = 8080, host = "0.0.0.0", module = Application::module).start(wait = true)

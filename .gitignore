@@ -85,3 +85,5 @@ data.db
 .fleet/
 
 app/src/main/kotlin/com/wynnscribe/server/test.kt
+
+service-account.json

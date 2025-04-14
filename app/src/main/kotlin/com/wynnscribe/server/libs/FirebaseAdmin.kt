@@ -6,10 +6,11 @@ import com.google.firebase.FirebaseOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseToken
 import com.google.firebase.auth.SessionCookieOptions
+import java.io.File
 
 object FirebaseAdmin {
     private val options = FirebaseOptions.builder()
-        .setCredentials(GoogleCredentials.fromStream(System.getenv("GOOGLE_SERVICE_ACCOUNT_JSON").byteInputStream()))
+        .setCredentials(GoogleCredentials.fromStream(File(System.getenv("GOOGLE_SERVICE_ACCOUNT_PATH")?:"service-account.json").inputStream()))
         .build()
 
     private val app = runCatching { FirebaseApp.getInstance() }.getOrNull()?:FirebaseApp.initializeApp(options)

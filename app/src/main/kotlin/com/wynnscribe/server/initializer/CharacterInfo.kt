@@ -5,6 +5,75 @@ import com.wynnscribe.server.databases.Originals
 import com.wynnscribe.server.databases.Projects
 
 fun initializeCharacterInfo() {
+    val characterInfoItemProject = Projects.getOrCreate(
+        Project.Create(
+            name = "/Item/CharacterInfo",
+            description = "",
+            filter = Project.Filter.Create(
+                null,
+                null,
+                null
+            )))?:return
+    
+    val characterInfoItem = Originals.getOrCreate(
+        projectId = characterInfoItemProject.id,
+        original = Project.Original.Create(
+            text = Project.Original.OriginalText(
+                """
+                    <!italic><aqua>Character Info
+                    """.trimIndent()
+            ),
+            stopOnMatch = true,
+            children = listOf(),
+            type = Project.Original.Type.UserInterface,
+            filter = Project.Filter.Create(
+                null,
+                title = Project.Filter.Content.Create(
+                    content = "Character Info",
+                    withColors = false,
+                    fullMatch = true
+                ),
+                null
+            )
+        )
+    )!!
+    
+    Originals.getOrCreate(
+        projectId = characterInfoItemProject.id,
+        original = Project.Original.Create(
+            text = Project.Original.OriginalText(
+                """
+                    <!italic><gray>View your current character
+                    <!italic><gray>information, assign skill points,
+                    <!italic><gray>access your ability tree, and more
+                    <!italic><dark_purple> 
+                    <!italic><dark_purple><dark_green>Unassigned Skill Points: </dark_green><white>{re:(.+)}
+                    <!italic><dark_purple><dark_aqua>✦ Unused Ability Points: </dark_aqua><white>{re:(.+)}
+                    <!italic><dark_purple> 
+                    <!italic><white><font:keybind></font><green> Click to Open
+                    """.trimIndent()
+            ),
+            template = Project.Original.Template(
+                """
+                    <!italic><gray>View your current character
+                    <!italic><gray>information, assign skill points,
+                    <!italic><gray>access your ability tree, and more
+                    <!italic><dark_purple> 
+                    <!italic><dark_purple><dark_green>Unassigned Skill Points: </dark_green><white>{1}
+                    <!italic><dark_purple><dark_aqua>✦ Unused Ability Points: </dark_aqua><white>{2}
+                    <!italic><dark_purple> 
+                    <!italic><white><font:keybind></font><green> Click to Open
+                    """.trimIndent()
+            ),
+            stopOnMatch = true,
+            children = listOf(),
+            type = Project.Original.Type.UserInterface,
+            parentId = characterInfoItem.id,
+        )
+    )
+
+    
+    
     val characterInfoProject = Projects.getOrCreate(
         Project.Create(
             name = "/UserInterface/CharacterInfo/Button",
@@ -90,7 +159,7 @@ fun initializeCharacterInfo() {
                     <!italic><dark_purple> 
                     <!italic><dark_purple><yellow>✦ Streak Multiplier: </yellow><white>{re:(.+)}
                     <!italic><dark_purple> 
-                    <!italic><red>Available in {re:(.+)}
+                    {re:(.+)}
                     """.trimIndent()
             ),
             template = Project.Original.Template(
@@ -101,7 +170,7 @@ fun initializeCharacterInfo() {
                     <!italic><dark_purple> 
                     <!italic><dark_purple><yellow>✦ Streak Multiplier: </yellow><white>{1}
                     <!italic><dark_purple> 
-                    <!italic><red>Available in {2}
+                    {2}
                     """.trimIndent()
             ),
             stopOnMatch = true,
@@ -113,10 +182,10 @@ fun initializeCharacterInfo() {
         projectId = characterInfoProject.id,
         original = Project.Original.Create(
             text = Project.Original.OriginalText(
-                """{re:(.+)} hours""".trimIndent()
+                """Available in {re:(.+)} hours""".trimIndent()
             ),
             template = Project.Original.Template(
-                """{1} hours""".trimIndent()
+                """Available in {1} hours""".trimIndent()
             ),
             stopOnMatch = true,
             parentId = dailyRewards.id,
@@ -128,7 +197,7 @@ fun initializeCharacterInfo() {
         projectId = characterInfoProject.id,
         original = Project.Original.Create(
             text = Project.Original.OriginalText(
-                """1 hour""".trimIndent()
+                """Available in 1 hour""".trimIndent()
             ),
             stopOnMatch = true,
             parentId = dailyRewards.id,
@@ -140,10 +209,10 @@ fun initializeCharacterInfo() {
         projectId = characterInfoProject.id,
         original = Project.Original.Create(
             text = Project.Original.OriginalText(
-                """{re:(.+)} minutes""".trimIndent()
+                """Available in {re:(.+)} minutes""".trimIndent()
             ),
             template = Project.Original.Template(
-                """{1} minutes""".trimIndent()
+                """Available in {1} minutes""".trimIndent()
             ),
             stopOnMatch = true,
             parentId = dailyRewards.id,
@@ -155,7 +224,34 @@ fun initializeCharacterInfo() {
         projectId = characterInfoProject.id,
         original = Project.Original.Create(
             text = Project.Original.OriginalText(
-                """1 minute""".trimIndent()
+                """Available in 1 minute""".trimIndent()
+            ),
+            stopOnMatch = true,
+            parentId = dailyRewards.id,
+            children = listOf(),
+            type = Project.Original.Type.UserInterface
+        )
+    )
+    Originals.getOrCreate(
+        projectId = characterInfoProject.id,
+        original = Project.Original.Create(
+            text = Project.Original.OriginalText(
+                """Available in {re:(.+)} seconds""".trimIndent()
+            ),
+            template = Project.Original.Template(
+                """Available in {1} seconds""".trimIndent()
+            ),
+            stopOnMatch = true,
+            parentId = dailyRewards.id,
+            children = listOf(),
+            type = Project.Original.Type.UserInterface
+        )
+    )
+    Originals.getOrCreate(
+        projectId = characterInfoProject.id,
+        original = Project.Original.Create(
+            text = Project.Original.OriginalText(
+                """Available in 1 second""".trimIndent()
             ),
             stopOnMatch = true,
             parentId = dailyRewards.id,

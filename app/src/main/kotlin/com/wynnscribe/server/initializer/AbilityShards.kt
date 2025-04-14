@@ -4,25 +4,25 @@ import com.wynnscribe.models.Project
 import com.wynnscribe.server.databases.Originals
 import com.wynnscribe.server.databases.Projects
 
-fun initializeMaterials() {
-    val materialsProject = Projects.getOrCreate(
+fun initializeAbilityShards() {
+    val abilityShardProject = Projects.getOrCreate(
         Project.Create(
-            name = "/Item/Materials",
+            name = "/Item/AbilityShard",
             description = "",
             filter = Project.Filter.Create(
-                type = Project.Filter.Content.Create(
-                    content = "#wynnscribe.item.material",
+                null,
+                title = Project.Filter.Content.Create(
+                    content = "Ability Shard",
                     withColors = false,
                     fullMatch = true
                 ),
-                null,
                 null
             )))?:return
     Originals.getOrCreate(
-        projectId = materialsProject.id,
+        projectId = abilityShardProject.id,
         original = Project.Original.Create(
             text = Project.Original.OriginalText("""
-                Crafting Material
+                Ability Shard
             """.trimIndent()),
             stopOnMatch = false,
             children = listOf(),
@@ -30,10 +30,11 @@ fun initializeMaterials() {
         )
     )
     Originals.getOrCreate(
-        projectId = materialsProject.id,
+        projectId = abilityShardProject.id,
         original = Project.Original.Create(
             text = Project.Original.OriginalText("""
-                Crafting Lv. Min:
+                <!italic><gray>Use this to reset your
+                <!italic><dark_purple><white>Ability Tree </white><gray>while in a town.
             """.trimIndent()),
             stopOnMatch = false,
             children = listOf(),
@@ -41,17 +42,10 @@ fun initializeMaterials() {
         )
     )
     Originals.getOrCreate(
-        projectId = materialsProject.id,
+        projectId = abilityShardProject.id,
         original = Project.Original.Create(
             text = Project.Original.OriginalText("""
-                <!italic><gray>Use this material to purchase
-                <!italic><dark_purple><gray>blocks in </gray><white>Housing</white><gray>, or to craft 
-                {re:([\s\S]+)}
-            """.trimIndent()),
-            template = Project.Original.Template("""
-                <!italic><gray>Use this material to purchase
-                <!italic><dark_purple><gray>blocks in </gray><white>Housing</white><gray>, or to craft 
-                {1}
+                Quest Req:
             """.trimIndent()),
             stopOnMatch = false,
             children = listOf(),

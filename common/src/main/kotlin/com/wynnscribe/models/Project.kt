@@ -210,14 +210,24 @@ interface Project {
 
         val type: Type
 
-        enum class Type {
-            UserInterface,
-            GameItem,
-            Chat,
-            Conversation,
-            Stat,
-            Damage,
-            Status
+        enum class Type(val type: DisplayType) {
+            UserInterface(DisplayType.ItemStack),
+            GameItem(DisplayType.ItemStack),
+            Chat(DisplayType.Chat),
+            Conversation(DisplayType.Conversation),
+            Stat(DisplayType.ItemStack),
+            Damage(DisplayType.ItemStack),
+            Status(DisplayType.ItemStack);
+
+            enum class DisplayType {
+                ItemStack,
+                TextDisplay,
+                Chat,
+                Conversation,
+                Title,
+                BossBar,
+                QuestGuide
+            }
         }
 
         @Serializable

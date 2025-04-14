@@ -8,7 +8,6 @@ fun Route.apiV1() {
         authenticate("auth-bearer") {
             languages()
             projects()
-            authentication()
             export()
         }
         publicLanguages()
